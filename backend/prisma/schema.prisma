@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  VOLUNTEER
+  ORGANIZER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(VOLUNTEER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  needs     Need[]   @relation("OrganizerNeeds")
+  responses Need[]   @relation("VolunteerResponses")
+}
+
+model Need {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  status      String   @default("OPEN") // OPEN, IN_PROGRESS, CLOSED
+  organizerId String
+  organizer   User     @relation("OrganizerNeeds", fields: [organizerId], references: [id])
+  volunteerId String?
+  volunteer   User?    @relation("VolunteerResponses", fields: [volunteerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
