@@ -18,6 +18,9 @@ RUN pnpm build
 # Фінальний етап з Nginx для роздачі статики
 FROM nginx:alpine
 
+# Копіюємо конфігурацію Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Копіюємо зібрані файли React у папку Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 

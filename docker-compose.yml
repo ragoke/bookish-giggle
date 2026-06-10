@@ -20,8 +20,6 @@ services:
       dockerfile: Dockerfile
     container_name: volunteer-backend
     restart: always
-    ports:
-      - "3001:3001"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-volunteer}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-volunteer_platform}?schema=public
       PORT: 3001
