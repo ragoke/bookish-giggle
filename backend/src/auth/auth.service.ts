@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id, role: user.role };
+    const payload = { email: user.email, sub: user.id, role: user.role, name: user.name };
     return {
       access_token: this.jwtService.sign(payload),
       user: payload,
@@ -42,6 +42,9 @@ export class AuthService {
       const invite = await this.prisma.inviteCode.findUnique({ where: { code: data.inviteCode } });
       if (!invite || invite.isUsed) {
         throw new UnauthorizedException('Недійсний або вже використаний код доступу');
+      }
+      if (invite.expiresAt < new Date()) {
+        throw new UnauthorizedException('Термін дії коду закінчився');
       }
     }
 

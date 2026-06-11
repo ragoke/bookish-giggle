@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200 dark:border-gray-700">
                   <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
                     <User className="w-4 h-4 mr-1.5" />
-                    {user?.email}
+                    {user?.name || user?.email}
                   </div>
                   <button 
                     onClick={handleLogout}

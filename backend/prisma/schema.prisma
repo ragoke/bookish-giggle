@@ -33,6 +33,7 @@ model InviteCode {
   isUsed    Boolean  @default(false)
   usedBy    String?
   createdAt DateTime @default(now())
+  expiresAt DateTime
 }
 
 model Need {
