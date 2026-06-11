@@ -2,7 +2,7 @@ import { Controller, Post, Body, UnauthorizedException, Get } from '@nestjs/comm
 import { AuthService } from './auth.service';
 import { Prisma } from '@prisma/client';
 
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
