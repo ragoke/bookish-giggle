@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { MapPin, Clock, ArrowRight, Loader2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface Need {
   id: string;
@@ -16,6 +18,7 @@ interface Need {
 export default function Dashboard() {
   const [needs, setNeeds] = useState<Need[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     // Отримуємо дані з бекенду (через Nginx проксі)
@@ -32,15 +35,21 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Дошка заявок</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">Знайдіть завдання, де ваша допомога буде найкориснішою</p>
         </div>
-        <button className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm self-start sm:self-auto">
-          + Створити заявку
-        </button>
+        
+        {user?.role === 'ORGANIZER' && (
+          <Link 
+            to="/create-need" 
+            className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-sm hover:shadow-md active:scale-95 self-start sm:self-auto text-center"
+          >
+            + Створити заявку
+          </Link>
+        )}
       </div>
 
       {loading ? (

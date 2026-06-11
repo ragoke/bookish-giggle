@@ -66,4 +66,10 @@ export class NeedsService implements OnModuleInit {
       }
     });
   }
+
+  async create(data: { title: string; description: string; location: string; time: string; organizerId: string }) {
+    return this.prisma.need.create({
+      data,
+    });
+  }
 }
