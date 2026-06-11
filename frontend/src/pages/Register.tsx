@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Loader2, User, Mail, Lock, Building } from 'lucide-react';
+import { Loader2, User, Mail, Lock, Building, Phone, Key } from 'lucide-react';
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [role, setRole] = useState<'VOLUNTEER' | 'ORGANIZER'>('VOLUNTEER');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,13 +17,31 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    if (role === 'VOLUNTEER' && !phone) {
+      setError('Будь ласка, вкажіть ваш номер телефону');
+      return;
+    }
+    
+    if (role === 'ORGANIZER' && !inviteCode) {
+      setError('Для реєстрації Організатора потрібен код-запрошення');
+      return;
+    }
+
     setLoading(true);
     
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify({ 
+          name, 
+          email, 
+          password, 
+          role,
+          ...(role === 'VOLUNTEER' ? { phone } : {}),
+          ...(role === 'ORGANIZER' ? { inviteCode } : {})
+        }),
       });
       
       const data = await response.json();
@@ -30,7 +50,6 @@ export default function Register() {
         throw new Error(data.message || 'Помилка реєстрації');
       }
       
-      // After successful register, we navigate to login. Or we could auto-login.
       navigate('/login');
     } catch (err: any) {
       setError(err.message);
@@ -64,6 +83,7 @@ export default function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              autoComplete="name"
               className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all"
               placeholder="Іван Франко"
             />
@@ -81,6 +101,7 @@ export default function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
               className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all"
               placeholder="john@example.com"
             />
@@ -98,6 +119,7 @@ export default function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="new-password"
               className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
             />
@@ -133,6 +155,45 @@ export default function Register() {
             </button>
           </div>
         </div>
+
+        {role === 'VOLUNTEER' && (
+          <div className="animate-in slide-in-from-top-2 duration-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Номер телефону</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                <Phone size={18} />
+              </div>
+              <input 
+                type="tel" 
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required={role === 'VOLUNTEER'}
+                autoComplete="tel"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all"
+                placeholder="+380 99 123 45 67"
+              />
+            </div>
+          </div>
+        )}
+
+        {role === 'ORGANIZER' && (
+          <div className="animate-in slide-in-from-top-2 duration-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Код-запрошення</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                <Key size={18} />
+              </div>
+              <input 
+                type="text" 
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value)}
+                required={role === 'ORGANIZER'}
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all uppercase"
+                placeholder="Введіть код"
+              />
+            </div>
+          </div>
+        )}
 
         <button 
           type="submit" 

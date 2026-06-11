@@ -24,6 +24,10 @@ export default function Layout({ children }: { children: ReactNode }) {
             <nav className="flex items-center space-x-4">
               <Link to="/dashboard" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white font-medium transition-colors">Заявки</Link>
               
+              {user?.role === 'ADMIN' && (
+                <Link to="/admin" className="text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 font-medium transition-colors">Адмін-панель</Link>
+              )}
+
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200 dark:border-gray-700">
                   <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">

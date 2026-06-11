@@ -16,7 +16,18 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() body: Prisma.UserCreateInput) {
+  async register(@Body() body: Prisma.UserCreateInput & { inviteCode?: string }) {
     return this.authService.register(body);
+  }
+
+  @Get('has-admin')
+  async hasAdmin() {
+    const hasAdmin = await this.authService.hasAdmin();
+    return { hasAdmin };
+  }
+
+  @Post('setup-admin')
+  async setupAdmin(@Body() body: Prisma.UserCreateInput) {
+    return this.authService.setupAdmin(body);
   }
 }
