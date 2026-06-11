@@ -28,6 +28,8 @@ model Need {
   title       String
   description String
   status      String   @default("OPEN") // OPEN, IN_PROGRESS, CLOSED
+  location    String   @default("")
+  time        String   @default("")
   organizerId String
   organizer   User     @relation("OrganizerNeeds", fields: [organizerId], references: [id])
   volunteerId String?
