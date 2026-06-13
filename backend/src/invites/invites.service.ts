@@ -22,4 +22,17 @@ export class InvitesService {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async revokeCode(id: string) {
+    return this.prisma.inviteCode.update({
+      where: { id },
+      data: { isUsed: true },
+    });
+  }
+
+  async deleteCode(id: string) {
+    return this.prisma.inviteCode.delete({
+      where: { id },
+    });
+  }
 }
