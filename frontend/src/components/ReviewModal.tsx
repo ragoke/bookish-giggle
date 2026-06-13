@@ -77,12 +77,12 @@ export default function ReviewModal({ needId, revieweeId, revieweeName, onClose,
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHoveredRating(star)}
                   onMouseLeave={() => setHoveredRating(0)}
-                  className="transition-transform hover:scale-110 focus:outline-none p-2"
+                  className="transition-transform hover:scale-110 focus:outline-none px-2"
                 >
                   <Star
                     className={`w-10 h-10 ${star <= (hoveredRating || rating)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-gray-300 dark:text-gray-600'
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-gray-300 dark:text-gray-600'
                       } transition-colors`}
                   />
                 </button>

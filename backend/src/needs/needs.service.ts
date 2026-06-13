@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Review } from '@prisma/client';
 
 @Injectable()
 export class NeedsService implements OnModuleInit {
@@ -149,7 +150,7 @@ export class NeedsService implements OnModuleInit {
 
     return applications.map(app => ({
       ...app,
-      hasReviewed: reviews.some(r => r.revieweeId === app.volunteer.id)
+      hasReviewed: reviews.some((r: Review) => r.revieweeId === app.volunteer.id)
     }));
   }
 
